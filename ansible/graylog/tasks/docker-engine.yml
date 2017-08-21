@@ -1,0 +1,56 @@
+- name: "Hosts"
+  hosts: all
+  become: yes
+
+  tasks:
+   - name: "Docker | apt-get install"
+     apt: name={{item}} state=present
+     with_items:
+     - apt-transport-https
+     - ca-certificates
+     - nfs-common
+     - htop
+     - cifs-utils
+     - python-pip
+
+   - name: "Docker | pip install docker-py"
+     pip:
+      name: docker-py
+
+   - name: "Docker | key"
+     apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D state=present
+
+   - name: "Docker | Add docker apt repository"
+     apt_repository: repo="deb https://apt.dockerproject.org/repo {{ ansible_distribution|lower }}-{{ ansible_distribution_release }} main" state=present
+
+   - name: "Docker | apt-get update"
+     apt: update_cache=yes
+
+   - name: "Docker | apt-get install docker-engine"
+     apt: name={{item}} state=present
+     with_items:
+     - docker-engine
+
+   - name: "Docker | Install docker-compose"
+     shell: curl -L https://github.com/docker/compose/releases/download/1.10.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+
+   - name: "Docker | Adjustment permission docker-compose"
+     file: path=/usr/local/bin/docker-compose mode=755
+
+   - name: "Docker | Enable Docker init.d"
+     service: name=docker enabled=yes
+     ignore_errors: yes
+
+   - name: "Docker | Restart Docker"
+     service: name=docker state=restarted
+     ignore_errors: yes
+
+   - name: "Docker | Install Rexray"
+     shell: curl -sSL https://dl.bintray.com/emccode/rexray/install | sh -s -- stable
+     ignore_errors: yes
+
+   - name: "Docker | Install plugins"
+     shell: docker plugin install rexray/ebs EBS_ACCESSKEY={{accesskey}} EBS_SECRETKEY={{secretkeys}} --grant-all-permissions
+     tags: docker-plugin
+     ignore_errors: yes
+

@@ -1,0 +1,124 @@
+version: '2'
+services:
+
+  logspout:
+    image: micahhausler/logspout:gelf
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8000:80
+    command: gelf://{{ipint}}:12201
+    depends_on:
+      - graylog
+    networks:
+      - graylognet
+    logging:
+     driver: "json-file"
+     options:
+      max-size: "250m"
+      max-file: "3"
+
+  mongo:
+    image: "mongo:3"
+    volumes:
+      - mongo:/data/db
+    networks:
+      - graylognet
+    logging:
+     driver: "json-file"
+     options:
+      max-size: "250m"
+      max-file: "3"
+
+  elasticsearch1:
+    image: elasticsearch:tgl
+    container_name: elasticsearch1
+    environment:
+      - cluster.name=graylog
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms5g -Xmx5g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 8g
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - graylognet
+    logging:
+     driver: "json-file"
+     options:
+      max-size: "250m"
+      max-file: "3"
+
+  graylog:
+    image: graylog:tgl
+    volumes:
+      - graylogjournal:/usr/share/graylog/data/journal
+      - graylogconf:/usr/share/graylog/data/config
+    environment:
+      GRAYLOG_WEB_ENDPOINT_URI: http://{{ipext}}/api/
+      GRAYLOG_ELASTICSEARCH_HOSTS: http://elasticsearch1:9200
+      GRAYLOG_PASSWORD_SECRET: {{graylog_pass_secret}}
+      GRAYLOG_ROOT_PASSWORD_SHA2: {{graylog_root_pass}}
+      GRAYLOG_OUTPUT_FLUSH_INTERVAL: 1
+      GRAYLOG_INPUTBUFFER_RING_SIZE: 4096
+      GRAYLOG_INPUTBUFFER_PROCESSORS: 1
+      GRAYLOG_PROCESSBUFFER_PROCESSORS: 4
+      GRAYLOG_OUTPUTBUFFER_PROCESSORS: 5
+      GRAYLOG_PROCESSOR_WAIT_STRATEGY: blocking
+      GRAYLOG_RING_SIZE: 524288
+      GRAYLOG_MESSAGE_JOURNAL_MAX_SIZE: 4gb
+      GRAYLOG_OUTPUT_BATCH_SIZE: 20000
+      GRAYLOG_STREAM_PROCESSING_TIMEOUT: 10000
+      GRAYLOG_STREAM_PROCESSING_MAX_FAULTS: 10
+    depends_on:
+      - mongo
+      - elasticsearch1
+    expose:
+      - "12201/udp"
+      - "1514/udp"
+      - "12900"
+      - "5044"
+    ports:
+      - "80:9000"
+      - "12201:12201/udp"
+      - "1514:1514/udp"
+      - "12900:12900"
+      - "5044:5044"
+      - "5044:5044/udp"
+    networks:
+      - graylognet
+    logging:
+     driver: "json-file"
+     options:
+      max-size: "250m"
+      max-file: "3"
+
+volumes:
+ mongo:
+  driver: rexray/ebs:latest
+  driver_opts:
+   volumetype: "gp2"
+   size: 300
+ esdata1:
+  driver: rexray/ebs:latest
+  driver_opts:
+   volumetype: "gp2"
+   size: 3500
+ graylogconf:
+  driver: rexray/ebs:latest
+  driver_opts:
+   volumetype: "gp2"
+   size: 10
+ graylogjournal:
+  driver: rexray/ebs:latest
+  driver_opts:
+   volumetype: "gp2"
+   size: 300
+
+networks:
+  graylognet:

@@ -1,0 +1,17 @@
+[graylog]
+54.196.66.95
+
+[all:vars]
+# EC2
+ansible_ssh_user=ubuntu
+ansible_ssh_private_key_file=../../keys/graylog.pem
+ipint=10.0.0.223
+ipext=54.196.66.95
+
+# GRAYLOG
+graylog_pass_secret=TxLguExNjEhpvq5UXXZrN3fuJP9f9uMRXTvHwMnfeyinguB83MSzOYWWvRIjiIIH4PujzQqHgSn9I2TqUslLmAaTFCNqA5qx
+graylog_root_pass=2617493f1cba71cb06f35c04ca148edffbb8316b2ae63dfd60fad268618f68b6
+
+# AWS ACCESS
+accesskey=
+secretkeys=

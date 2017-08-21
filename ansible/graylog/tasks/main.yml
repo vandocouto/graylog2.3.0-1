@@ -1,0 +1,6 @@
+---
+# tasks file for graylog
+- include: docker-engine.yml
+  tags: docker-engine
+- include: build.yml
+  tags: build

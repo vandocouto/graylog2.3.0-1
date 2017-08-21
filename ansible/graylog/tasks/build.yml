@@ -1,0 +1,53 @@
+- name: "Hosts"
+  hosts: all
+  become: yes
+
+  tasks:
+   - name: "Graylog | Create directory /docker-compose/graylog"
+     file: path=/docker-compose/{{item}} state=directory mode=0755
+     with_items:
+      - graylog
+      - graylog/build-graylog
+      - graylog/build-elk
+
+   - name: "Graylog | files"
+     template:
+      src: "{{item.src}}"
+      dest: /docker-compose/{{item.dest}}
+      mode: 0644
+     with_items:
+      - {dest: graylog/build-graylog,       src: ../files/graylog/Dockerfile}
+      - {dest: graylog/build-elk,           src: ../files/elasticsearch/Dockerfile}
+      - {dest: graylog/docker-compose.yml,  src: ../templates/docker-compose.yml}
+
+   - name: "Graylog | Build graylog:tgl"
+     docker_image:
+      path: /docker-compose/graylog/build-graylog
+      dockerfile: Dockerfile
+      name: graylog
+      tag: tgl
+     tags: build-graylog
+
+   - name: "Graylog | Build elasticsearch:tgl"
+     docker_image:
+      path: /docker-compose/graylog/build-elk
+      dockerfile: Dockerfile
+      name: elasticsearch
+      tag: tgl
+     tags: build-elk
+
+   - name: "Graylog | sysctl.conf"
+     sysctl:
+      name: "{{item.name}}"
+      value: "{{item.value}}"
+      sysctl_set: yes
+      state: present
+     with_items:
+      - {name: vm.max_map_count, value: 1048576}
+      - {name: fs.file-max,      value: 1048576}
+
+   - name: "Graylog | Deploy container"
+     command: docker-compose -f /docker-compose/graylog/docker-compose.yml up -d logspout
+     async: 120
+     poll: 120
+     tags: docker-compose
