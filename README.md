@@ -15,7 +15,7 @@ $ cd graylog2.3.0-1/ansible/graylog/
 </pre>
 
 
-###Configurando o arquivos hosts
+### Configurando o arquivos hosts
  
 ##### Elastic IP / Private IP
 * Ajuste o IP Público logo abaixo em - [graylog]</br>
@@ -50,7 +50,7 @@ accesskey:
 secretkeys:
 
 
-#####Examplo:
+##### Examplo:
 
 <pre>
 [graylog]
@@ -97,7 +97,7 @@ $ sudo su
 # docker-compose -f /docker-compose/graylog/docker-compose.yml up -d logspout
 </pre>
 
-###Login!!!
+### Login!!!
 
 <pre>
 http://54.196.66.95
