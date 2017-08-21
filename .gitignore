@@ -2,3 +2,4 @@
 main.retry
 *.pem
 *.idea
+.idea
