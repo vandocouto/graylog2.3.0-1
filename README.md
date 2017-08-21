@@ -27,17 +27,14 @@ ipint=PRIVATE IP
 ipext=PUBLIC IP
 
 ##### Variávies
-* Configure a variáveis graylog_pass e graylog_root_pass
 
-graylog_pass_secret: Generate one by using for example: pwgen -N 1 -s 96
+Graylog:
+* graylog_pass_secret: Generate one by using for example: pwgen -N 1 -s 96
+* graylog_root_pass: Create one by using for example: echo -n tutoriaisgnulinux | shasum -a 256
 
-graylog_root_pass: Create one by using for example: echo -n tutoriaisgnulinux | shasum -a 256
-
-* You can use the AWS Management Console to manage the access keys of IAM users.
-
-accesskey: 
-secretkeys:
-
+AWS:
+* accesskey: 
+* secretkeys:
 
 ##### Exemplo:
 
