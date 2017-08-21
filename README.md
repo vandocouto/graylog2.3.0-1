@@ -20,20 +20,13 @@ $ cd graylog2.3.0-1/ansible/graylog/
 ##### Elastic IP / Private IP
 * Ajuste o IP Público logo abaixo em - [graylog]</br>
 Exemplo:
-<br>
-<br>
 [graylog]
-<br>
 PUBLIC IP
-<br>
-<br>
 [all:ars]
-<br>
 ipint=PRIVATE IP
-<br>
 ipext=PUBLIC IP
 
-#####Variávies
+##### Variávies
 * Configure a variáveis graylog_pass e graylog_root_pass
 
 graylog_pass_secret: Generate one by using for example: pwgen -N 1 -s 96
