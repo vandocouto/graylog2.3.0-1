@@ -1,7 +1,9 @@
 
 # Deploy do projeto
 
-Para Deploy do projeto será necessário que tenha o Ansible já configurado no seu ambiente
+* Para Deploy do projeto será necessário que tenha o Ansible e o Git já configurado no seu ambiente
+* Instância mínima necessária para deploy do projeto m4.large na AWS
+
 
 * Clone do projeto
 <pre>
