@@ -8,7 +8,7 @@
 
 * Clone do projeto
 <pre>
-$ https://github.com/vandocouto/graylog2.3.0-1.git
+$ git clone https://github.com/vandocouto/graylog2.3.0-1.git
 </pre> 
 
 * Acessando o projeto
