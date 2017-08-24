@@ -3,7 +3,7 @@
 
 * Para Deploy do projeto será necessário que tenha o Ansible e o Git já configurado no seu ambiente
 * Recurso mínimo para deploy (4VCPU / 8GB MEM) 
-* Instância utilizada nos teste m4.large (AWS)
+* Instância utilizada nos testes m4.large (AWS)
 <hr>
 
 * Clone do projeto
@@ -22,7 +22,9 @@ $ cd graylog2.3.0-1/ansible/graylog/
  
 ##### Elastic IP / Private IP
 * Ajuste o IP Público logo abaixo em - [graylog]</br>
+
 Exemplo:
+
 [graylog]
 PUBLIC IP
 [all:ars]
