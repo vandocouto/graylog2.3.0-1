@@ -28,7 +28,7 @@ Exemplo:
 [graylog]
 <br>
 PUBLIC IP
-<br>
+<br><br>
 [all:ars]
 <br>
 ipint=PRIVATE IP
