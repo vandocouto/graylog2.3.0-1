@@ -26,9 +26,13 @@ $ cd graylog2.3.0-1/ansible/graylog/
 Exemplo:
 
 [graylog]
+<br>
 PUBLIC IP
+<br>
 [all:ars]
+<br>
 ipint=PRIVATE IP
+<br>
 ipext=PUBLIC IP
 
 ##### Variávies
